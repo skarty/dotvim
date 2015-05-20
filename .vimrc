@@ -1,7 +1,7 @@
 " vim: fdm=marker ts=2 sts=2 sw=2 fdl=0
 
 " Variables {{{
-let mapleader = "\<Space>"
+let mapleader = ","
 let s:is_windows = has('win32') || has('win64')
 "}}}
 
@@ -11,171 +11,51 @@ if !filereadable(expand("~/.vim/autoload/plug.vim"))
     silent call mkdir(expand("~/.vim/autoload", 1), 'p')
     execute "!curl -fLo ".expand("~/.vim/autoload/plug.vim", 1)." https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
     autocmd VimEnter * PlugInstall
-endif
+endif 
 
 if s:is_windows
   set rtp+=~/.vim
 endif
 
+
+
+
 call plug#begin('~/.vim/plugged')
 let g:plug_url_format = 'https://github.com/%s.git'
+
 "}}}
 
-" Plugin settings {{{
-Plug 'saaguero/vim-utils'
-Plug 'ajh17/VimCompletesMe'
-Plug 'haya14busa/incsearch.vim' "{{{
-  map /  <Plug>(incsearch-forward)
-  map ?  <Plug>(incsearch-backward)
-"}}}
-Plug 'kana/vim-textobj-user'
-Plug 'bps/vim-textobj-python'
-Plug 'saaguero/vim-textobj-pastedtext'
-Plug 'Konfekt/FastFold'
-Plug 'octol/vim-cpp-enhanced-highlight'
-Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-fireplace' "{{{
-  augroup VimFireplace
-    autocmd FileType clojure nmap <buffer> <C-]> <Plug>FireplaceDjump
-  augroup END
-"}}}
-Plug 'tpope/vim-sexp-mappings-for-regular-people'
-Plug 'guns/vim-sexp' "{{{
-  let g:sexp_enable_insert_mode_mappings = 0
-"}}}
-Plug 'raimondi/delimitmate' "{{{
-  let delimitMate_expand_cr = 1
-"}}}
-Plug 'terryma/vim-multiple-cursors' "{{{
-  let g:multi_cursor_normal_maps  = {'f': 1, 't': 1, 'F': 1, 'T':1,
-                                        \ 'c': 1, 'd': 1, 'y':1}
-  let g:multi_cursor_exit_from_insert_mode = 0
-"}}}
-Plug 'vim-scripts/matchit.zip'
-Plug 'majutsushi/tagbar' "{{{
-  nnoremap <silent> <F3> :TagbarToggle<CR>
-"}}}
-Plug 'sirver/ultisnips', { 'on': [] } "{{{
-  let g:UltiSnipsSnippetsDir = '~/.vim/plugged/vim-snippets/UltiSnips'
-  let g:UltiSnipsExpandTrigger="<c-j>"
-  let g:UltiSnipsJumpForwardTrigger="<c-j>"
-  let g:UltiSnipsJumpBackwardTrigger="<c-k>"
-  let g:UltiSnipsListSnippets="<c-l>"
-
-  inoremap <silent> <C-j> <C-r>=LoadUltiSnips()<cr>
-
-  " This function only runs when UltiSnips is not loaded
-  function! LoadUltiSnips()
-    let l:curpos = getcurpos()
-    execute plug#load('ultisnips')
-    call cursor(l:curpos[1], l:curpos[2])
-    call UltiSnips#ExpandSnippet()
-    return ""
-  endfunction
-"}}}
-Plug 'saaguero/vim-snippets'
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' } "{{{
+" PLUGINS
+Plug 'morhetz/gruvbox'
+Plug 'vim-latex/vim-latex'
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+  map <F2> :NERDTree d:\Matematik<CR>
+  map <C-n> :NERDTreeToggle<CR>
   nnoremap <silent> <F4> :NERDTreeToggle<CR>
   nnoremap <silent> <F5> :NERDTreeFind<CR>
-  let NERDTreeShowHidden=1
-"}}}
-Plug 'endel/vim-github-colorscheme'
-Plug 'sjl/badwolf'
-Plug 'idbrii/vim-mark', { 'on': '<Plug>MarkSet' } " {{{
-  nmap <Leader>m <Plug>MarkSet
-"}}}
-Plug 'kien/ctrlp.vim' "{{{
-  nnoremap <leader>e :CtrlP<cr>
-  nnoremap <leader>E :CtrlPMRUFiles<cr>
-  nnoremap <leader>a :CtrlPBuffer<cr>
-  nnoremap <leader>A :CtrlPCurFile<cr>
-  nnoremap <leader>t :CtrlPBufTag<cr>
-  nnoremap <leader>T :CtrlPTag<cr>
+Plug 'rking/ag.vim'
+"Plug 'SirVer/ultisnips'
+let g:UltiSnipsExpandTrigger="½"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+Plug 'honza/vim-snippets'
+Plug 'bling/vim-airline'
+Plug 'c:\home\.vim\plugged\YouCompleteMe'
+  
+  call plug#end()
 
-  let g:ctrlp_match_window = 'bottom,order:btt,min:20,max:20,results:20'
-  let g:ctrlp_working_path_mode = 0
-  let g:ctrlp_custom_ignore = {
-        \ 'dir':  '\v[\/](\.git|\.hg|\.svn)$',
-        \ 'file': '\.pyc$\|\.pyo$',
-        \ }
-  let g:ctrlp_open_multiple_files = '1jr'
-  let g:ctrlp_max_files = 0
-  let g:ctrlp_lazy_update = 50
-  let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
-  let g:ctrlp_buftag_types = { 'ant': '--language-force=ant' }
-"}}}
-Plug 'felikz/ctrlp-py-matcher'
-Plug 'davidhalter/jedi-vim', {'for': 'python'} "{{{
-  " rely on tab trigger
-  let g:jedi#completions_command = ""
-  let g:jedi#popup_on_dot = 0
-  " prevents jedi to mess with completeopt
-  let g:jedi#auto_vim_configuration = 0
-  let g:jedi#use_tabs_not_buffers = 0
 
-  let g:jedi#goto_definitions_command = "<C-]>"
-  let g:jedi#goto_assignments_command = "<C-[>"
-  let g:jedi#usages_command = "<leader>u"
-  let g:jedi#documentation_command = '<leader>d'
-  let g:jedi#rename_command = "<leader>r"
-"}}}
-Plug 'jmcantrell/vim-virtualenv'
+colorscheme gruvbox
 
-call plug#end()
-"}}}
+"Remap taster
 
-" Vim sensible settings {{{
-set nocompatible
-set encoding=utf-8
-set listchars=trail:.,tab:>\ ,eol:$
-set lazyredraw
-set laststatus=2
-set statusline=%-4m%f\ %y\ \ %=%{&ff}\ \|\ %{&fenc}\ \|\ %{virtualenv#statusline()}\ \ [%l:%c]
-set incsearch hlsearch
-set nonumber
-set backspace=indent,eol,start
-set nostartofline
-set autoread
-set scrolloff=3
-set wildmenu wildignorecase wildmode=list:longest,full
-set cursorline
-set ignorecase smartcase
-set showmode showcmd
-set shortmess+=I
-set hidden
-set history=1000
-set complete-=i completeopt=menu
-set splitright splitbelow
-set display+=lastline
-set foldenable foldmethod=syntax foldlevelstart=99
-set ttimeoutlen=50
-set switchbuf=useopen
-set mouse=a
-set breakindent
+nnoremap dd :UltiSnipsEdit<CR>
+nnoremap <Esc> i
+imap <Esc> <Esc>
+nnoremap j k
+nnoremap . :
+nnoremap k j
 
-filetype plugin indent on
-syntax on
-
-" better backup, swap and undo storage {{{
-set noswapfile
-set backup
-set undofile
-
-set backupdir=~/.vim/dirs/backup
-set undodir=~/.vim/dirs/undo
-if !isdirectory(&backupdir)
-  call mkdir(&backupdir, "p")
-endif
-if !isdirectory(&undodir)
-  call mkdir(&undodir, "p")
-endif
-"}}}
-"}}}
-
-" GUI & Terminal setttings {{{
 if has("gui_running")
   if has("gui_macvim")
     set guifont=Consolas:h15
@@ -207,105 +87,28 @@ augroup CustomColors
   autocmd ColorScheme * highlight CursorLine cterm=bold ctermbg=NONE gui=bold guibg=NONE
 augroup END
 
-colorscheme badwolf
-"}}}
 
-" Spaces and Filetype settings {{{
-set autoindent
-set expandtab smarttab
-set tabstop=4 softtabstop=4 shiftwidth=4
+set number "nnn
+set numberwidth=1
+set mouse=a
 
-augroup CustomFiletype
-  autocmd!
-  autocmd BufNewFile,BufRead *.html set filetype=html.htmldjango
-  autocmd BufNewFile,BufRead *.wxs set filetype=wxs.xml
-  autocmd BufNewFile,BufRead *.wxi set filetype=wxi.xml
-  autocmd BufNewFile,BufRead *.md set filetype=markdown
-  autocmd BufNewFile,BufRead *.gradle set filetype=groovy
+filetype plugin on
 
-  autocmd FileType html,xml,javascript set tabstop=2 softtabstop=2 shiftwidth=2
-  autocmd FileType python,vim setlocal foldmethod=indent
-  autocmd Filetype text setlocal textwidth=80
-augroup END
-"}}}
+set shellslash
 
-" Custom utils/mappings {{{
-" rsi mappings
-inoremap <C-a> <Home>
-cnoremap <C-a> <Home>
-inoremap <C-e> <End>
-cnoremap <C-e> <End>
 
-" Filter command history the same way as <Up> <Down> do
-cnoremap <C-p> <Up>
-cnoremap <C-n> <Down>
+set grepprg=grep\ -nH\ $*
 
-" avoid common typos
-command! -bang Q q<bang>
-command! -bang W w<bang>
+filetype indent on
 
-" replace ex mode map and use it for repeating last executed macro
-nnoremap Q @@
 
-" save as sudo
-cabbrev w!! w !sudo tee "%"
+let g:tex_flavor='latex'
 
-" easy system clipboard copy/paste
-noremap <Leader>y "*y
-noremap <Leader>Y "*Y
-noremap <Leader>p "*p
-noremap <Leader>P "*P
+set sw=2
 
-" copy full file path to clipboard
-nnoremap <silent><Leader>gp :let @+ = expand("%:p")<cr>
+set iskeyword+=:
+cmap Q q
 
-" easy window navigation
-nnoremap <silent> <c-l> <c-w>l
-nnoremap <silent> <c-j> <c-w>j
-nnoremap <silent> <c-h> <c-w>h
-nnoremap <silent> <c-k> <c-w>k
-nnoremap <silent> <leader>\ <c-^>
-nnoremap <silent> <leader>q :botright copen<cr>
 
-" cd to directory of current file
-nnoremap <silent> <leader>cd :lcd %:p:h<CR>
 
-augroup CustomUtils
-  autocmd!
-  " Open the file placing the cursor where it was
-  autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
-        \| exe "normal! g'\"" | endif
 
-  " Use xmllint for xml formatting if availabe
-  if executable('xmllint')
-    autocmd FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
-  endif
-
-  " Close preview window when leaving insert mode http://stackoverflow.com/a/3107159/854676
-  autocmd InsertLeave * if pumvisible() == 0|pclose|endif
-augroup END
-
-" clear the search buffer when hitting return
-nnoremap <silent> <leader><cr> :nohlsearch<cr>
-
-" split lines on whitespace
-function! SplitOnSpace()
-  execute "normal f\<space>i\r\e"
-  " make it repeatable (requires vim-repeat)
-  silent! call repeat#set("\<Plug>CustomSplitOnSpace")
-endfunction
-nnoremap <silent> <Plug>CustomSplitOnSpace :call SplitOnSpace()<cr>
-nnoremap <silent> <leader>s :call SplitOnSpace()<cr>
-
-" Use Ag as default grep if available
-if executable('ag')
-  set grepprg=ag\ --nogroup\ --nocolor\ --column
-  set grepformat=%f:%l:%c:%m
-  command! -nargs=+ -bang Ag silent! grep! <args> | redraw! | botright copen
-endif
-
-" source private vimrc file if available
-if filereadable(expand("~/.vimrc.local"))
-  source ~/.vimrc.local
-endif
-"}}}
