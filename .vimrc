@@ -108,6 +108,7 @@ set sw=2
 
 set iskeyword+=:
 cmap Q q
+set dir=/tmp
 
 
 
